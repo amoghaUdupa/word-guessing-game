@@ -44,15 +44,16 @@ export const Keyboard = ({ onChar, onDelete, onEnter, onShift, shiftPressed, gue
       } else {
         const key = e.key
         if ((key >= "a" && key <= "z") || (key >= "A" && key <= "Z")) {
-          if(currentGuess.length===0)
-          {
-            if(enToKnVowelMap.has(e.key))
-            {
+          if(currentGuess.length===0) {
+            if(enToKnVowelMap.has(e.key)) {
               onChar(enToKnVowelMap.get(e.key))
               return
             }
+            onChar(enToKnMap.get(e.key))
           }
-          onChar(enToKnMap.get(e.key))
+          else {
+            onChar(enToKnMap.get(e.key))
+          }
         }
       }
     }
@@ -100,6 +101,9 @@ export const Keyboard = ({ onChar, onDelete, onEnter, onShift, shiftPressed, gue
         <Key value={shiftPressed ? "ಝ":"ಜ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಝ":"ಜ"]} />
         <Key value={shiftPressed ? "ಖ":"ಕ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಖ":"ಕ"]} />
         <Key value={shiftPressed ? "ಳ":"ಲ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಳ":"ಲ"]} />
+        <Key width={65.4} value="SHIFT" onClick={onClick} status={shiftPressed?'present':'absent'}>
+          Shift
+        </Key>
       </div>
       <div className="flex justify-center">
         <Key width={65.4} value="ENTER" onClick={onClick}>

@@ -9,14 +9,14 @@ type Props = {
 
 export const Grid = ({ guesses, currentGuess }: Props) => {
   const empties =
-    guesses.length < 5 ? Array.from(Array(5 - guesses.length)) : []
+    guesses.length < 7 ? Array.from(Array(7 - guesses.length)) : []
 
   return (
-    <div className="pb-6">
+    <div className="pb-9">
       {guesses.map((guess, i) => (
         <CompletedRow key={i} guess={guess} />
       ))}
-      {guesses.length < 6 && <CurrentRow guess={currentGuess} />}
+      {guesses.length < 8 && <CurrentRow guess={currentGuess} />}
       {empties.map((_, i) => (
         <EmptyRow key={i} />
       ))}

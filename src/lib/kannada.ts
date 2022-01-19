@@ -7,6 +7,12 @@ let anuswara = '\u0c82';
 let visarga = '\u0c83';
 let expression = new RegExp(`(?:(${swara})|((?:${vyanjana}${halant})*)(${vyanjana})(?:(${vowel_signs})|(${halant}))?)(${anuswara}|${visarga})?`, 'g');
 
+export const swaraExp = new RegExp(`(${swara})`)
+export const vyanjanaExp = new RegExp(`(${vyanjana})`)
+export const vowel_signsExp = new RegExp(`(${vowel_signs})`)
+export const halantExp = new RegExp(`(${halant})`)
+//export const anuswara_visargeExp = new RegExp(`(${anuswara} | ${visarga})`)
+
 export const knTokenize = (
     mystring: string
 ): RegExpMatchArray[] => {
