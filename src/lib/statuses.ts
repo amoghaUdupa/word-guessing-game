@@ -1,5 +1,5 @@
 import { solution } from './words'
-import {knTokenize} from "./kannada";
+import {knTokenize, halantExp, vyanjanaExp, swaraExp, vowel_signsExp} from "./kannada";
 
 export type CharStatus = 'absent' | 'present' | 'correct' | 'inplace'
 
@@ -40,6 +40,7 @@ enToKnMap.set('i','ಿ')
 enToKnMap.set('I','ೀ')
 enToKnMap.set('o','ೊ')
 enToKnMap.set('O','ೋ')
+enToKnMap.set('a','ಾ')
 enToKnMap.set('A','ಾ')
 enToKnMap.set('V','ೌ')
 enToKnMap.set('e','ೆ' )
@@ -101,6 +102,7 @@ enToKnVowelMap.set('O','ಓ')
 enToKnVowelMap.set('V','ಔ')
 
 export const volwelToVowelMap = new Map();
+volwelToVowelMap.set('ಅ','ಾ')
 volwelToVowelMap.set('ಆ','ಾ')
 volwelToVowelMap.set('ಇ','ಿ')
 volwelToVowelMap.set('ಈ','ೀ')
@@ -114,6 +116,24 @@ volwelToVowelMap.set('ಒ','ೊ')
 volwelToVowelMap.set('ಓ','ೋ')
 volwelToVowelMap.set('ಔ','ೌ')
 
+export const isValid = (
+    currentGuess: string, character: string
+): boolean => {
+  const prev = currentGuess.at(-1)
+  if(prev) {
+    // If halant or vowel sign, previous must be a vyanjana
+    if (character.match(halantExp) || character.match(vowel_signsExp)) {
+      if(!prev.match(vyanjanaExp))
+        return false
+    }
+  }else {
+    // First character must be a swara or a vyanjana
+    if(!(character.match(swaraExp) || character.match(vyanjanaExp))) {
+      return false
+    }
+  }
+  return true
+}
 
 export const getStatuses = (
   guesses: string[]

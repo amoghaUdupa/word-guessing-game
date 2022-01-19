@@ -12,6 +12,7 @@ import {
   saveGameStateToLocalStorage,
 } from './lib/localStorage'
 import {knTokenize} from "./lib/kannada";
+import {isValid} from "./lib/statuses";
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState('')
@@ -45,7 +46,7 @@ function App() {
   }, [isGameWon])
 
   const onChar = (value: string) => {
-    if (knTokenize(currentGuess.concat(value)).length <= 5 && guesses.length < 6) {
+    if (knTokenize(currentGuess.concat(value)).length <= 5 && guesses.length < 8 && isValid(currentGuess, value)) {
       setCurrentGuess(`${currentGuess}${value}`)
     }
   }
@@ -69,7 +70,7 @@ function App() {
 
     const winningWord = isWinningWord(currentGuess)
 
-    if (knTokenize(currentGuess).length === 5 && guesses.length < 6 && !isGameWon) {
+    if (knTokenize(currentGuess).length === 5 && guesses.length < 8 && !isGameWon) {
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
@@ -77,7 +78,7 @@ function App() {
         return setIsGameWon(true)
       }
 
-      if (guesses.length === 5) {
+      if (guesses.length === 7) {
         setIsGameLost(true)
         return setTimeout(() => {
           setIsGameLost(false)

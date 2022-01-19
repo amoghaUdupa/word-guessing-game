@@ -58,46 +58,55 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    How to play
+                    ಆಡುವುದು ಹೇಗೆ
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Guess the WORDLE in 6 tries. After each guess, the color
-                      of the tiles will change to show how close your guess was
-                      to the word.
+                      8 ಪ್ರಯತ್ನದಲ್ಲಿ ಸರಿಯಾದ ಪದ ಗುರುತಿಸಬೇಕು. ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಹಾಗೆ, ಪ್ರತಿ ಬಣ್ಣವು ಒಂದು ಸುಳಿವು ನೀಡುತ್ತದೆ
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="W" status="correct" />
-                      <Cell value="E" />
-                      <Cell value="A" />
-                      <Cell value="R" />
-                      <Cell value="Y" />
+                      <Cell value="ಸ್ನಾ"  />
+                      <Cell value="ತ" />
+                      <Cell value="ಕೋ" status="correct"/>
+                      <Cell value="ತ್ತ" />
+                      <Cell value="ರ" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter W is in the word and in the correct spot.
+                      3ನೇ ಮನೆಯಲ್ಲಿ ಸರಿಯಾದ ವ್ಯಂಜನವಿದೆ, ಒತ್ತು ಮತ್ತು ಕಾಗುಣಿತ ಕೂಡ ಸರಿಯಿದೆ
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="P" />
-                      <Cell value="I" />
-                      <Cell value="L" status="present" />
-                      <Cell value="O" />
-                      <Cell value="T" />
+                      <Cell value="ಅ" status="inplace" />
+                      <Cell value="ನ" />
+                      <Cell value="ವ"  />
+                      <Cell value="ರ" />
+                      <Cell value="ತ" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter L is in the word but in the wrong spot.
+                      1ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ಸ್ವರ/ವ್ಯಂಜನ ಸರಿ, ಅದರ ಒತ್ತು ಅಥವಾ ಕಾಗುಣಿತ ತಪ್ಪು
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="V" />
-                      <Cell value="A" />
-                      <Cell value="G" />
-                      <Cell value="U" status="absent" />
-                      <Cell value="E" />
+                      <Cell value="ಕ" />
+                      <Cell value="ವ" />
+                      <Cell value="ಲು" />
+                      <Cell value="ದಾ"status="present" />
+                      <Cell value="ರಿ" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter U is not in the word in any spot.
+                      4ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ವ್ಯಂಜನ ಪದದಲ್ಲಿ ಇದೆ ಆದರೆ ಆ ಮನೆಯಲ್ಲಿ ಅಲ್ಲ
+                    </p>
+
+                    <div className="flex justify-center mb-1 mt-4">
+                      <Cell value="ದೇ" status="absent"/>
+                      <Cell value="ಶ್ಯ" />
+                      <Cell value="ಕಾಂ" />
+                      <Cell value="ಭೋ"  />
+                      <Cell value="ಜಿ" />
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      1ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ಸ್ವರ/ವ್ಯಂಜನ ಪದದಲ್ಲಿ ಇಲ್ಲ
                     </p>
                   </div>
                 </div>
