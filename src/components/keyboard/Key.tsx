@@ -28,6 +28,8 @@ export const Key = ({
         status === 'correct',
       'bg-orange-500 hover:bg-orange-600 active:bg-orange-700 dark:bg-orange-700 text-white':
         status === 'present',
+      'bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white':
+          status === 'inplace',
     }
   )
 
