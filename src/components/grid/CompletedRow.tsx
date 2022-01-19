@@ -1,5 +1,6 @@
 import { getGuessStatuses } from '../../lib/statuses'
 import { Cell } from './Cell'
+import {knTokenize} from "../../lib/kannada";
 
 type Props = {
   guess: string
@@ -10,8 +11,8 @@ export const CompletedRow = ({ guess }: Props) => {
 
   return (
     <div className="flex justify-center mb-1">
-      {guess.split('').map((letter, i) => (
-        <Cell key={i} value={letter} status={statuses[i]} />
+      {knTokenize(guess).map((letter, i) => (
+        <Cell key={i} value={letter.slice(1).join('')} status={statuses[i]} />
       ))}
     </div>
   )

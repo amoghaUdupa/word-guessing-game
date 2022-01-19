@@ -11,6 +11,7 @@ import {
   loadGameStateFromLocalStorage,
   saveGameStateToLocalStorage,
 } from './lib/localStorage'
+import {knTokenize} from "./lib/kannada";
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState('')
@@ -21,6 +22,7 @@ function App() {
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
   const [shareComplete, setShareComplete] = useState(false)
+    const [shiftPressed, setShiftPresser] = useState(false)
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage()
     if (loaded?.solution !== solution) {
@@ -43,7 +45,7 @@ function App() {
   }, [isGameWon])
 
   const onChar = (value: string) => {
-    if (currentGuess.length < 5 && guesses.length < 6) {
+    if (knTokenize(currentGuess.concat(value)).length <= 5 && guesses.length < 6) {
       setCurrentGuess(`${currentGuess}${value}`)
     }
   }
@@ -51,6 +53,11 @@ function App() {
   const onDelete = () => {
     setCurrentGuess(currentGuess.slice(0, -1))
   }
+
+  const onShift = () => {
+      setShiftPresser(!shiftPressed)
+    }
+
 
   const onEnter = () => {
     if (!isWordInWordList(currentGuess)) {
@@ -62,7 +69,7 @@ function App() {
 
     const winningWord = isWinningWord(currentGuess)
 
-    if (currentGuess.length === 5 && guesses.length < 6 && !isGameWon) {
+    if (knTokenize(currentGuess).length === 5 && guesses.length < 6 && !isGameWon) {
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
@@ -81,18 +88,18 @@ function App() {
 
   return (
     <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <Alert message="Word not found" isOpen={isWordNotFoundAlertOpen} />
+      <Alert message="ವರ್ಡಲ್ಲ" isOpen={isWordNotFoundAlertOpen} />
       <Alert
-        message={`You lost, the word was ${solution}`}
+        message={`ತಪ್ಪು, ಇವತ್ತಿನ ಪದ ${solution}`}
         isOpen={isGameLost}
       />
       <Alert
-        message="Game copied to clipboard"
+        message="ಕಾಪಿ ಮಾಡಲಾಗಿದೆ"
         isOpen={shareComplete}
         variant="success"
       />
       <div className="flex w-80 mx-auto items-center mb-8">
-        <h1 className="text-xl grow font-bold">Not Wordle</h1>
+        <h1 className="text-xl grow font-bold">ಕನ್ನಡ ವರ್ಡಲ್ಲ</h1>
         <InformationCircleIcon
           className="h-6 w-6 cursor-pointer"
           onClick={() => setIsInfoModalOpen(true)}
@@ -103,7 +110,10 @@ function App() {
         onChar={onChar}
         onDelete={onDelete}
         onEnter={onEnter}
+        onShift={onShift}
+        shiftPressed={shiftPressed}
         guesses={guesses}
+        currentGuess={currentGuess}
       />
       <WinModal
         isOpen={isWinModalOpen}
