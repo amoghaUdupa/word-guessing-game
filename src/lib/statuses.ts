@@ -119,8 +119,8 @@ volwelToVowelMap.set('ಔ','ೌ')
 export const isValid = (
     currentGuess: string, character: string
 ): boolean => {
-  const prev = currentGuess.at(-1)
-  if(prev) {
+  const prev = currentGuess.length>0? currentGuess.slice(-1):""
+  if(prev && prev.length>0) {
     // If halant or vowel sign, previous must be a vyanjana
     if (character.match(halantExp) || character.match(vowel_signsExp)) {
       if(!prev.match(vyanjanaExp))
@@ -174,20 +174,24 @@ export const getVyanjana = (in_str: RegExpMatchArray[])
     : string[] => {
   let ret_str : string[] = [];
   in_str.forEach((regexMatch, i) => {
-    regexMatch.forEach((partOfWord, str_idx) => {
-      if(str_idx===0)
-        return
+    var str_idx = 0
+    for (var partOfWord of regexMatch)   {
+      if(str_idx===0) {
+        str_idx+=1
+        continue
+      }
       if(partOfWord) {
         if ((str_idx === 1 || str_idx === 3) && partOfWord.length > 0) {
           ret_str.push(partOfWord)
-          return
+          break
         }
         if (str_idx === 2 && partOfWord.length > 0) {
-          ret_str.push(partOfWord.at(0) || "")
-          return
+          ret_str.push(partOfWord.slice(0,1) || "")
+          break
         }
       }
-    })
+      str_idx+=1
+    }
     return
   })
   return ret_str
