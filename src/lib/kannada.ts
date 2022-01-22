@@ -11,7 +11,7 @@ export const swaraExp = new RegExp(`(${swara})`)
 export const vyanjanaExp = new RegExp(`(${vyanjana})`)
 export const vowel_signsExp = new RegExp(`(${vowel_signs})`)
 export const halantExp = new RegExp(`(${halant})`)
-//export const anuswara_visargeExp = new RegExp(`(${anuswara} | ${visarga})`)
+export const anuswara_visargeExp = new RegExp(`(${anuswara}|${visarga})`)
 
 export const knTokenize = (
     mystring: string
