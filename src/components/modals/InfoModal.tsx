@@ -10,7 +10,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
   return (
     <BaseModal title="How to play" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
-          8 ಪ್ರಯತ್ನದಲ್ಲಿ ಸರಿಯಾದ ಪದ ಗುರುತಿಸಬೇಕು. ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಹಾಗೆ, ಪ್ರತಿ ಬಣ್ಣವು ಒಂದು ಸುಳಿವು ನೀಡುತ್ತದೆ
+          8 ಪ್ರಯತ್ನದಲ್ಲಿ ಸರಿಯಾದ ಪದ ಗುರುತಿಸಬೇಕು.  <a href="https://alar.ink">alar.ink</a>  ನಿಘಂಟಿನಲ್ಲಿ ಇರುವ ಪದಗಳನ್ನು ಮಾತ್ರ ಪರಿಗಣಿಸುತ್ತದೆ. ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಹಾಗೆ, ಪ್ರತಿ ಬಣ್ಣವು ಒಂದು ಸುಳಿವು ನೀಡುತ್ತದೆ
       </p>
 
     <div className="flex justify-center mb-1 mt-4">
@@ -47,15 +47,16 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
     </p>
 
     <div className="flex justify-center mb-1 mt-4">
-        <Cell value="ದೇ" status="absent"/>
-        <Cell value="ಶ್ಯ" />
-        <Cell value="ಕಾಂ" />
-        <Cell value="ಭೋ"  />
-        <Cell value="ಜಿ" />
+      <Cell value="ದೇ" status="absent" swaraStatus="correct"/>
+      <Cell value="ಶ್ಯ" />
+      <Cell value="ಕಾಂ" status="present" swaraStatus="correct" />
+      <Cell value="ಭೋ"  />
+      <Cell value="ಜಿ" />
     </div>
     <p className="text-sm text-gray-500">
-        1ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ಸ್ವರ/ವ್ಯಂಜನ ಪದದಲ್ಲಿ ಇಲ್ಲ
+      1ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ವ್ಯಂಜನ ಪದದಲ್ಲಿ ಇಲ್ಲ, ಆದರೆ ೇ-ಕಾರವು ಆ ಸ್ಥಾನದಲ್ಲಿದೆ.
+      3ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ವ್ಯಂಜನ ಪದದಲ್ಲ ಆ ಸ್ಥಾನದಲ್ಲಿ ಇಲ್ಲ. ಹಾಗೆ, ಆಂ ಕಾರವು ಆ ಸ್ಥಾನದಲ್ಲಿದೆ.
     </p>
-    </BaseModal>
+   </BaseModal>
   )
 }

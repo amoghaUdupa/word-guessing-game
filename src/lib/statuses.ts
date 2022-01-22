@@ -1,5 +1,5 @@
 import { solution } from './words'
-import {knTokenize, halantExp, vyanjanaExp, swaraExp, vowel_signsExp} from "./kannada";
+import {knTokenize, halantExp, vyanjanaExp, swaraExp, vowel_signsExp, anuswara_visargeExp} from "./kannada";
 
 export type CharStatus = 'absent' | 'present' | 'correct' | 'inplace'
 
@@ -102,7 +102,7 @@ enToKnVowelMap.set('O','ಓ')
 enToKnVowelMap.set('V','ಔ')
 
 export const volwelToVowelMap = new Map();
-volwelToVowelMap.set('ಅ','ಾ')
+volwelToVowelMap.set('ಅ','')
 volwelToVowelMap.set('ಆ','ಾ')
 volwelToVowelMap.set('ಇ','ಿ')
 volwelToVowelMap.set('ಈ','ೀ')
@@ -196,6 +196,91 @@ export const getVyanjana = (in_str: RegExpMatchArray[])
   })
   return ret_str
 }
+export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
+  var splitSolution = knTokenize(solution)
+  var splitGuess = knTokenize(guess)
+  splitSolution.forEach((o, i, a) => {
+    if(i === 0){
+      var ii = 0
+      for(var oi of o)
+      {
+        if(volwelToVowelMap.has(oi)){
+          a[i][ii] = volwelToVowelMap.get(oi) + a[i][ii].slice(1)
+          ii+=1
+        }
+      }
+    }
+  })
+  splitGuess.forEach((o, i, a) => {
+    if(i === 0){
+      var ii = 0
+      for(var oi of o)
+      {
+        if(volwelToVowelMap.has(oi)){
+          a[i][ii] = volwelToVowelMap.get(oi) + a[i][ii].slice(1)
+          ii+=1
+        }
+      }
+    }
+  })
+
+  const statuses: CharStatus[] = Array.from(Array(guess.length))
+  splitGuess.forEach((letter, i) => {
+    statuses[i] = 'absent'
+    const solVowelExp = splitSolution[i].slice(0,1).join('').match(vowel_signsExp)
+    const gusVowelExp = letter.slice(0,1).join('').match(vowel_signsExp)
+    const solAVExp = splitSolution[i].slice(0,1).join('').match(anuswara_visargeExp)
+    const gusAVExp = letter.slice(0,1).join('').match(anuswara_visargeExp)
+    var compareVowel = false
+    var compareAV = false
+
+
+    if (solVowelExp !== null) {
+      if(gusVowelExp) {
+        if (solVowelExp.join('').slice(0, 1) === gusVowelExp.join('').slice(0, 1)) {
+          compareVowel = true
+        }
+      } else {
+        statuses[i] = 'absent'
+        return
+      }
+    } else {
+      if(gusVowelExp) {
+        statuses[i] = 'absent'
+        return
+      }
+      else {
+        compareVowel = true
+      }
+    }
+
+    if (solAVExp !== null){
+      if(gusAVExp) {
+        if (solAVExp.join('').slice(0, 1) === gusAVExp.join('').slice(0, 1)) {
+          compareAV = true
+        }
+      } else {
+        statuses[i] = 'absent'
+        return
+      }
+    } else {
+      if(gusAVExp) {
+        statuses[i] = 'absent'
+        return
+      }
+      else
+        compareAV = true
+    }
+
+    if(compareAV && compareVowel) {
+      statuses[i] = 'correct'
+    }
+    else if(gusAVExp === null && gusVowelExp === null) {
+      statuses[i] = 'correct'
+    }
+  })
+  return statuses
+}
 
 export const getGuessStatuses = (guess: string): CharStatus[] => {
   const splitSolution = knTokenize(solution)
@@ -221,6 +306,7 @@ export const getGuessStatuses = (guess: string): CharStatus[] => {
       }
     }
   })
+
   splitGuessVyanjana.forEach((letter, i) => {
     if (letter) {
       if (splitSolutionVyanjana.includes(letter)) {

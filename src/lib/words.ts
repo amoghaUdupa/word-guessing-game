@@ -17,7 +17,7 @@ export const getWordOfDay = () => {
   const epochMs = new Date('January 1, 2022 00:00:00').valueOf()
   const now = Date.now()
   const msInDay = 86400000
-  const index = Math.floor((now - epochMs) / msInDay)
+  const index = Math.floor((now - epochMs - 19800000) / msInDay)
   const nextday = (index + 1) * msInDay + epochMs
 
   return {
