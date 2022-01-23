@@ -1,5 +1,5 @@
 import { KeyValue } from '../../lib/keyboard'
-import {getStatuses, enToKnMap, enToKnVowelMap, volwelToVowelMap} from '../../lib/statuses'
+import {getStatuses, enToKnMap, enToKnVowelMap, vowelToVowelMap} from '../../lib/statuses'
 import { Key } from './Key'
 import { useEffect } from 'react'
 import { ENTER_TEXT, DELETE_TEXT } from '../../constants/strings'
@@ -27,7 +27,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, onShift, shiftPressed, gue
     }else {
       if(!(currentGuess.length===0))
       {
-        value = volwelToVowelMap.has(value)?volwelToVowelMap.get(value) : value
+        value = vowelToVowelMap.has(value)?vowelToVowelMap.get(value) : value
       }
       onChar(value)
     }
@@ -89,7 +89,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, onShift, shiftPressed, gue
         <Key value={shiftPressed ? "ಫ" : "ಪ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಫ" : "ಪ"]} />
       </div>
       <div className="flex justify-center mb-1">
-        <Key width={65.4} value="SHIFT" onClick={onClick} status={shiftPressed?'present':'absent'}>
+        <Key width={65.4} value="SHIFT" onClick={onClick} status={shiftPressed?'absent':undefined}>
           Shift
         </Key>
         <Key value={shiftPressed ? "ಆ":"ಅ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಆ":"ಅ"]} />
@@ -101,7 +101,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, onShift, shiftPressed, gue
         <Key value={shiftPressed ? "ಝ":"ಜ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಝ":"ಜ"]} />
         <Key value={shiftPressed ? "ಖ":"ಕ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಖ":"ಕ"]} />
         <Key value={shiftPressed ? "ಳ":"ಲ"} onClick={onClick} status={charStatuses[shiftPressed ? "ಳ":"ಲ"]} />
-        <Key width={65.4} value="SHIFT" onClick={onClick} status={shiftPressed?'present':'absent'}>
+        <Key width={65.4} value="SHIFT" onClick={onClick} status={shiftPressed?'absent':undefined}>
           Shift
         </Key>
       </div>

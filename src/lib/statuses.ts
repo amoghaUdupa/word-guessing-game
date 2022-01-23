@@ -3,6 +3,8 @@ import {knTokenize, halantExp, vyanjanaExp, swaraExp, vowel_signsExp, anuswara_v
 
 export type CharStatus = 'absent' | 'present' | 'correct' | 'inplace'
 
+const charLevel : { [key:string]:number; } = { 'undefined':0, 'absent':0, 'present':1, 'inplace':2, 'correct':3 };
+
 export type CharValue =
   | 'ಟ' | 'ಠ'
   | 'ಡ' | 'ಢ'
@@ -10,19 +12,19 @@ export type CharValue =
   | 'ರ' | 'ಋ'
   | 'ತ' | 'ಥ'
   | 'ಯ'| 'ಐ'
-  | 'ಉ'|'ಊ'
-  | 'ಇ'|'ಈ'
-  | 'ಒ'|'ಓ'
-  | 'ಪ'|'ಫ'
-  | 'ಅ'|'ಆ'
-  | 'ಸ'|'ಶ'
-  | 'ದ'|'ಧ'
-  | '್'|'‌್'
-  | 'ಗ'|'ಘ'
-  | 'ಹ'|'ಃ'
-  | 'ಜ'|'ಝ'
-  | 'ಕ'|'ಖ'
-  | 'ಲ'|'ಳ'
+  | 'ಉ'| 'ಊ'
+  | 'ಇ' | 'ಈ'
+  | 'ಒ' | 'ಓ'
+  | 'ಪ' | 'ಫ'
+  | 'ಅ' | 'ಆ'
+  | 'ಸ' | 'ಶ'
+  | 'ದ' | 'ಧ'
+  | '್' | '‌್'
+  | 'ಗ' | 'ಘ'
+  | 'ಹ' | 'ಃ'
+  | 'ಜ' | 'ಝ'
+  | 'ಕ' | 'ಖ'
+  | 'ಲ' | 'ಳ'
   | 'ಞ'| 'ಙ'
   | 'ಷ'| 'ಷ'
   | 'ಚ'| 'ಛ'
@@ -30,6 +32,7 @@ export type CharValue =
   | 'ಬ'| 'ಭ'
   | 'ನ'| 'ಣ'
   | 'ಮ'| 'ಂ'
+
 
 export const enToKnMap = new Map();
 enToKnMap.set('R','ೃ')
@@ -101,20 +104,20 @@ enToKnVowelMap.set('o','ಒ')
 enToKnVowelMap.set('O','ಓ')
 enToKnVowelMap.set('V','ಔ')
 
-export const volwelToVowelMap = new Map();
-volwelToVowelMap.set('ಅ','')
-volwelToVowelMap.set('ಆ','ಾ')
-volwelToVowelMap.set('ಇ','ಿ')
-volwelToVowelMap.set('ಈ','ೀ')
-volwelToVowelMap.set('ಉ','ು')
-volwelToVowelMap.set('ಊ','ೂ')
-volwelToVowelMap.set('ಋ','ೃ')
-volwelToVowelMap.set('ಎ' ,'ೆ')
-volwelToVowelMap.set('ಏ','ೇ')
-volwelToVowelMap.set('ಐ','ೈ')
-volwelToVowelMap.set('ಒ','ೊ')
-volwelToVowelMap.set('ಓ','ೋ')
-volwelToVowelMap.set('ಔ','ೌ')
+export const vowelToVowelMap = new Map();
+vowelToVowelMap.set('ಅ','ಾ')
+vowelToVowelMap.set('ಆ','ಾ')
+vowelToVowelMap.set('ಇ','ಿ')
+vowelToVowelMap.set('ಈ','ೀ')
+vowelToVowelMap.set('ಉ','ು')
+vowelToVowelMap.set('ಊ','ೂ')
+vowelToVowelMap.set('ಋ','ೃ')
+vowelToVowelMap.set('ಎ' ,'ೆ')
+vowelToVowelMap.set('ಏ','ೇ')
+vowelToVowelMap.set('ಐ','ೈ')
+vowelToVowelMap.set('ಒ','ೊ')
+vowelToVowelMap.set('ಓ','ೋ')
+vowelToVowelMap.set('ಔ','ೌ')
 
 export const isValid = (
     currentGuess: string, character: string
@@ -144,26 +147,26 @@ export const getStatuses = (
 
   guesses.forEach((word) => {
     const splitGuessVyanjana = getVyanjana(knTokenize(word))
-    splitGuessVyanjana.forEach((letter, i) => {
-      if (!splitSolutionVyanjana.includes(letter)) {
-        // make status absent
-        return (charObj[letter] = 'absent')
+    knTokenize(word).forEach((letter, i) => {
+      if (letter.slice(1).join('') ===  splitSolution[i].slice(1).join('') && charLevel[charObj[getVyanjana(new Array(letter))[0]]] < 3 ) {
+        return (charObj[getVyanjana(new Array(letter))[0]] = 'correct')
       }
     })
     splitGuessVyanjana.forEach((letter, i) => {
-      if (splitSolutionVyanjana.includes(letter)) {
+      if (splitSolutionVyanjana[i] === letter && charLevel[charObj[letter]] < 2 ) {
+        return (charObj[letter] = 'inplace')
+      }
+    })
+    splitGuessVyanjana.forEach((letter, i) => {
+      if (splitSolutionVyanjana.includes(letter) && charLevel[charObj[letter]] < 1) {
         // make status absent
         return (charObj[letter] = 'present')
       }
     })
     splitGuessVyanjana.forEach((letter, i) => {
-      if (splitSolutionVyanjana[i] === letter) {
-        return (charObj[letter] = 'inplace')
-      }
-    })
-    knTokenize(word).forEach((letter, i) => {
-      if (letter.slice(1).join('') ===  splitSolution[i].slice(1).join('') ) {
-        return (charObj[getVyanjana(new Array(letter))[0]] = 'correct')
+      if (!splitSolutionVyanjana.includes(letter)) {
+        // make status absent
+        return (charObj[letter] = 'absent')
       }
     })
   })
@@ -196,6 +199,7 @@ export const getVyanjana = (in_str: RegExpMatchArray[])
   })
   return ret_str
 }
+
 export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
   var splitSolution = knTokenize(solution)
   var splitGuess = knTokenize(guess)
@@ -204,8 +208,8 @@ export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
       var ii = 0
       for(var oi of o)
       {
-        if(volwelToVowelMap.has(oi)){
-          a[i][ii] = volwelToVowelMap.get(oi) + a[i][ii].slice(1)
+        if(vowelToVowelMap.has(oi)){
+          a[i][ii] = vowelToVowelMap.get(oi) + a[i][ii].slice(1)
           ii+=1
         }
       }
@@ -216,8 +220,8 @@ export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
       var ii = 0
       for(var oi of o)
       {
-        if(volwelToVowelMap.has(oi)){
-          a[i][ii] = volwelToVowelMap.get(oi) + a[i][ii].slice(1)
+        if(vowelToVowelMap.has(oi)){
+          a[i][ii] = vowelToVowelMap.get(oi) + a[i][ii].slice(1)
           ii+=1
         }
       }
@@ -234,7 +238,7 @@ export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
     var compareVowel = false
     var compareAV = false
 
-
+    // swara validation
     if (solVowelExp !== null) {
       if(gusVowelExp) {
         if (solVowelExp.join('').slice(0, 1) === gusVowelExp.join('').slice(0, 1)) {
@@ -254,6 +258,7 @@ export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
       }
     }
 
+    // anuswara-visarge validation
     if (solAVExp !== null){
       if(gusAVExp) {
         if (solAVExp.join('').slice(0, 1) === gusAVExp.join('').slice(0, 1)) {
@@ -272,6 +277,7 @@ export const getGuessSwaraStatuses = (guess: string): CharStatus[] => {
         compareAV = true
     }
 
+    // Combined check
     if(compareAV && compareVowel) {
       statuses[i] = 'correct'
     }
@@ -287,53 +293,48 @@ export const getGuessStatuses = (guess: string): CharStatus[] => {
   const splitGuess = knTokenize(guess)
   const splitSolutionVyanjana  = getVyanjana(splitSolution)
   const splitGuessVyanjana = getVyanjana(splitGuess)
+
   const statuses: CharStatus[] = Array.from(Array(splitGuess.length))
-  let istatuses = Array<number>(splitGuess.length).fill(0);
 
-  // handle all correct cases first
-  splitGuess.forEach((letter, i) => {
-    if (letter.slice(1).join('') === splitSolution[i].slice(1).join('')) {
-      istatuses[i]+=1
-      return
+  splitSolution.forEach((letter, i) => {
+    if (letter.slice(1).join('') === splitGuess[i].slice(1).join('')) {
+      statuses[i] = 'correct'
     }
   })
 
-  splitGuessVyanjana.forEach((letter, i) => {
-    if (letter) {
-      if (letter === splitSolutionVyanjana[i]) {
-        istatuses[i] += 1
-        return
+  splitSolutionVyanjana.forEach((letter, i) => {
+    if (letter === splitGuessVyanjana[i] && typeof statuses[i] === 'undefined') {
+      statuses[i] = 'inplace'
+    }
+  })
+
+  // Take care of more than one case
+  var counts : { [key:string]:number; } = {};
+  var sol_idx = 0
+  for (const num of splitSolutionVyanjana) {
+    if(!statuses[sol_idx])
+      counts[num] = counts[num] ? counts[num] + 1 : 1;
+    sol_idx += 1
+  }
+
+  for (const count in counts) {
+    var gus_idx = 0
+    while (counts[count] > 0) {
+      for (var vyanjana of splitGuessVyanjana.slice(gus_idx)) {
+        if(vyanjana === count && !statuses[gus_idx]) {
+          statuses[gus_idx] = 'present'
+          break
+        }
+        gus_idx+=1
       }
+      counts[count] -= 1
     }
-  })
-
-  splitGuessVyanjana.forEach((letter, i) => {
-    if (letter) {
-      if (splitSolutionVyanjana.includes(letter)) {
-        istatuses[i] += 1
-        return
-      }
-    }
-  })
+  }
 
   statuses.forEach((letter, i) => {
-    if(istatuses[i] === 0) {
+    if(!statuses[i]){
       statuses[i] = 'absent'
-      return
     }
-    if(istatuses[i] === 1) {
-      statuses[i] = 'present'
-      return
-    }
-    if(istatuses[i] === 2) {
-      statuses[i] = 'inplace'
-      return
-    }
-    if(istatuses[i] === 3) {
-      statuses[i] = 'correct'
-      return
-    }
-
   })
 
   return statuses

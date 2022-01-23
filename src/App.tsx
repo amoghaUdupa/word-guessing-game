@@ -169,7 +169,7 @@ function App() {
 
       <Alert message="ವರ್ಡಲ್ಲ" isOpen={isWordNotFoundAlertOpen} />
       <Alert
-        message={`ತಪ್ಪು, ಇವತ್ತಿನ ಪದ ${solution}`}
+        message={`ತಪ್ಪು, ಇವತ್ತಿನ ಪದ " ${solution} "`}
         isOpen={isGameLost}
       />
       <Alert
