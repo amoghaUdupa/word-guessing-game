@@ -4,7 +4,7 @@ import {knTokenize} from "./kannada";
 
 export const shareStatus = (guesses: string[]) => {
   navigator.clipboard.writeText(
-    'ಕನ್ನಡ ವರ್ಡಲ್ಲ ' +
+    'ಕನ್ನಡ #ವರ್ಡಲ್ಲ ' +
       solutionIndex +
       ' ' +
       guesses.length +

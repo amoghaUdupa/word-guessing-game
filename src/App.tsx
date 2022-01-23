@@ -82,7 +82,7 @@ function App() {
         setIsGameLost(true)
         return setTimeout(() => {
           setIsGameLost(false)
-        }, 2000)
+        }, 5000)
       }
     }
   }
@@ -91,7 +91,7 @@ function App() {
     <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <Alert message="ವರ್ಡಲ್ಲ" isOpen={isWordNotFoundAlertOpen} />
       <Alert
-        message={`ತಪ್ಪು, ಇವತ್ತಿನ ಪದ ${solution}`}
+        message={`ತಪ್ಪು, ಇವತ್ತಿನ ಪದ " ${solution} "`}
         isOpen={isGameLost}
       />
       <Alert
