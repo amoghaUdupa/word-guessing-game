@@ -105,7 +105,7 @@ enToKnVowelMap.set('O','ಓ')
 enToKnVowelMap.set('V','ಔ')
 
 export const vowelToVowelMap = new Map();
-vowelToVowelMap.set('ಅ','ಾ')
+vowelToVowelMap.set('ಅ','')
 vowelToVowelMap.set('ಆ','ಾ')
 vowelToVowelMap.set('ಇ','ಿ')
 vowelToVowelMap.set('ಈ','ೀ')
