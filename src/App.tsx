@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { InformationCircleIcon, MenuIcon } from '@heroicons/react/outline'
 import { useState, useEffect } from 'react'
 import { Alert } from './components/alerts/Alert'
 import { Grid } from './components/grid/Grid'
@@ -6,26 +6,36 @@ import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
 import { InfoModal } from './components/modals/InfoModal'
 import { WinModal } from './components/modals/WinModal'
-import { isWordInWordList, isWinningWord, solution } from './lib/words'
+import {isWordInWordList, isWinningWord, solution, setWordOfDay} from './lib/words'
 import {
   loadGameStateFromLocalStorage,
   saveGameStateToLocalStorage,
 } from './lib/localStorage'
 import {knTokenize} from "./lib/kannada";
 import {isValid} from "./lib/statuses";
+import {SettingsModal} from "./components/modals/SettingsModal";
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState('')
   const [isGameWon, setIsGameWon] = useState(false)
   const [isWinModalOpen, setIsWinModalOpen] = useState(false)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
   const [shareComplete, setShareComplete] = useState(false)
-    const [shiftPressed, setShiftPresser] = useState(false)
+  const [shiftPressed, setShiftPresser] = useState(false)
+  const [wordLength, setWordLength] = useState(5)
+  const [enabled, setEnabled] = useState(true)
+
+
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage()
+      if(loaded?.wordLength === 4 || loaded?.wordLength === 5) {
+          setWordLength(loaded?.wordLength)
+          setWordOfDay(loaded?.wordLength)
+      }
     if (loaded?.solution !== solution) {
       return []
     }
@@ -36,8 +46,8 @@ function App() {
   })
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, solution })
-  }, [guesses])
+    saveGameStateToLocalStorage({ guesses, solution, wordLength })
+  })
 
   useEffect(() => {
     if (isGameWon) {
@@ -46,9 +56,13 @@ function App() {
   }, [isGameWon])
 
   const onChar = (value: string) => {
-    if (knTokenize(currentGuess.concat(value)).length <= 5 && guesses.length < 8 && isValid(currentGuess, value)) {
+    if (knTokenize(currentGuess.concat(value)).length <= wordLength && guesses.length < 8 && isValid(currentGuess, value)) {
       setCurrentGuess(`${currentGuess}${value}`)
     }
+  }
+
+  const onChange = () => {
+      setEnabled(!enabled)
   }
 
   const onDelete = () => {
@@ -57,11 +71,17 @@ function App() {
 
   const onShift = () => {
       setShiftPresser(!shiftPressed)
-    }
+  }
 
+  const clearGuesses = () => {
+      guesses.length = 0
+      setIsGameWon(false)
+      setIsGameLost(false)
+  }
 
   const onEnter = () => {
-    if (!isWordInWordList(currentGuess)) {
+      console.log("Hitting enter")
+    if (!isWordInWordList(currentGuess, wordLength) && enabled) {
       setIsWordNotFoundAlertOpen(true)
       return setTimeout(() => {
         setIsWordNotFoundAlertOpen(false)
@@ -70,7 +90,7 @@ function App() {
 
     const winningWord = isWinningWord(currentGuess)
 
-    if (knTokenize(currentGuess).length === 5 && guesses.length < 8 && !isGameWon) {
+    if (knTokenize(currentGuess).length === wordLength && guesses.length < 8 && !isGameWon) {
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
@@ -100,13 +120,17 @@ function App() {
         variant="success"
       />
       <div className="flex w-80 mx-auto items-center mb-8">
-        <h1 className="text-xl grow font-bold">ಕನ್ನಡ ವರ್ಡಲ್ಲ</h1>
+        <h1 className="text-lg grow font-bold">ಕನ್ನಡ ವರ್ಡಲ್ಲ</h1>
         <InformationCircleIcon
           className="h-6 w-6 cursor-pointer"
           onClick={() => setIsInfoModalOpen(true)}
         />
+          <MenuIcon
+              className="h-6 w-6 cursor-pointer"
+              onClick={() => setIsSettingsModalOpen(true)}
+          />
       </div>
-      <Grid guesses={guesses} currentGuess={currentGuess} />
+      <Grid guesses={guesses} currentGuess={currentGuess} wordLength={wordLength} />
       <Keyboard
         onChar={onChar}
         onDelete={onDelete}
@@ -115,6 +139,15 @@ function App() {
         shiftPressed={shiftPressed}
         guesses={guesses}
         currentGuess={currentGuess}
+      />
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        handleClose={() => {setIsSettingsModalOpen(false); setWordOfDay(wordLength)}}
+        enabled={enabled}
+        onChange={onChange}
+        wordLength={wordLength}
+        setWordLength={setWordLength}
+        clearGuesses={clearGuesses}
       />
       <WinModal
         isOpen={isWinModalOpen}
@@ -127,6 +160,7 @@ function App() {
             setShareComplete(false)
           }, 2000)
         }}
+        wordLength={wordLength}
       />
       <InfoModal
         isOpen={isInfoModalOpen}
@@ -140,19 +174,19 @@ function App() {
       <button
         type="button"
         className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        onClick={() => setIsAboutModalOpen(true)}
-      >
-        About this game
-      </button>
-      <button
-        type="button"
-        className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         onClick={ () => window.open("https://alar.ink")}
       > 
         ನಿಘಂಟು
       </button>
+        <button
+            type="button"
+            className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={() => setIsAboutModalOpen(true)}
+        >
+            About this game
+        </button>
     </div>
   )
 }
 
-export default App
+export default App;

@@ -2,10 +2,10 @@ import { getGuessStatuses } from './statuses'
 import { solutionIndex } from './words'
 import {knTokenize} from "./kannada";
 
-export const shareStatus = (guesses: string[]) => {
+export const shareStatus = (guesses: string[], wordLength: number) => {
   navigator.clipboard.writeText(
     'ಕನ್ನಡ #ವರ್ಡಲ್ಲ ' +
-      solutionIndex +
+      (wordLength===4?(solutionIndex-23):solutionIndex) +
       ' ' +
       guesses.length +
       '/8\n\n' +
@@ -14,13 +14,11 @@ export const shareStatus = (guesses: string[]) => {
 }
 
 export const generateEmojiGrid = (guesses: string[]) => {
-    console.log(guesses)
   return guesses
     .map((guess) => {
       const status = getGuessStatuses(guess)
       return knTokenize(guess)
         .map((letter, i) => {
-            console.log(letter)
           switch (status[i]) {
             case 'correct':
               return '🟩'
