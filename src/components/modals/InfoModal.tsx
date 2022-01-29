@@ -8,7 +8,7 @@ type Props = {
 
 export const InfoModal = ({ isOpen, handleClose }: Props) => {
   return (
-    <BaseModal title="How to play" isOpen={isOpen} handleClose={handleClose}>
+    <BaseModal title="ಆಡುವುದು ಹೇಗೆ" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
           8 ಪ್ರಯತ್ನದಲ್ಲಿ ಸರಿಯಾದ ಪದ ಗುರುತಿಸಬೇಕು.  <a href="https://alar.ink">alar.ink</a>  ನಿಘಂಟಿನಲ್ಲಿ ಇರುವ ಪದಗಳನ್ನು ಮಾತ್ರ ಪರಿಗಣಿಸುತ್ತದೆ. ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಹಾಗೆ, ಪ್ರತಿ ಬಣ್ಣವು ಒಂದು ಸುಳಿವು ನೀಡುತ್ತದೆ
       </p>

@@ -3,9 +3,8 @@ import {
   InformationCircleIcon,
   ChartBarIcon,
   SunIcon,
+    MenuIcon
 } from '@heroicons/react/outline'
-
-//import { InformationCircleIcon, MenuIcon } from '@heroicons/react/outline'
 
 import { useState, useEffect } from 'react'
 import { Alert } from './components/alerts/Alert'
@@ -26,19 +25,18 @@ import {
 } from './constants/strings'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
 
-//import { WinModal } from './components/modals/WinModal'
 import {isWordInWordList, isWinningWord, solution, setWordOfDay} from './lib/words'
 
 import {
-  loadGameStateFromLocalStorage,
-  saveGameStateToLocalStorage,
+    getWordLengthFromLocalStorage,
+    loadGameStateFromLocalStorage,
+    saveGameStateToLocalStorage,
 } from './lib/localStorage'
 import {knTokenize} from "./lib/kannada";
 import {isValid} from "./lib/statuses";
 import {SettingsModal} from "./components/modals/SettingsModal";
 
 import './App.css'
-import {MenuIcon} from "@heroicons/react/solid";
 
 const ALERT_TIME_MS = 2000
 
@@ -49,7 +47,6 @@ function App() {
 
   const [currentGuess, setCurrentGuess] = useState('')
   const [isGameWon, setIsGameWon] = useState(false)
-  const [isWinModalOpen, setIsWinModalOpen] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
@@ -68,25 +65,37 @@ function App() {
   const [shareComplete, setShareComplete] = useState(false)
   const [shiftPressed, setShiftPresser] = useState(false)
   const [wordLength, setWordLength] = useState(5)
+  const [settingsWordLength, setSettingsWordLength] = useState(5)
   const [enabled, setEnabled] = useState(true)
 
   const [guesses, setGuesses] = useState<string[]>(() => {
-    const loaded = loadGameStateFromLocalStorage()
-      if(loaded?.wordLength === 4 || loaded?.wordLength === 5) {
-          setWordLength(loaded?.wordLength)
-          setWordOfDay(loaded?.wordLength)
-      }
-    if (loaded?.solution !== solution) {
-      return []
+    var storedWordLength = getWordLengthFromLocalStorage()
+    if(storedWordLength === 4 || storedWordLength === 5) {
+      setWordLength(storedWordLength)
+      setWordOfDay(storedWordLength)
     }
-    const gameWasWon = loaded.guesses.includes(solution)
-    if (gameWasWon) {
-      setIsGameWon(true)
+
+    if (storedWordLength) {
+        if (storedWordLength !== wordLength){
+            setWordLength(storedWordLength)
+        }
+        const loaded = loadGameStateFromLocalStorage(storedWordLength)
+        const gameWasWon = loaded?.guesses.includes(solution)
+        if (gameWasWon) {
+            setIsGameWon(true)
+        }
+        if (loaded?.guesses.length === 6 && !gameWasWon) {
+            setIsGameLost(true)
+        }
+        if (loaded?.solution !== solution) {
+            return []
+        }
+        if (loaded.guesses.includes(solution)) {
+            setIsGameWon(true)
+        }
+        return loaded.guesses
     }
-    if (loaded.guesses.length === 6 && !gameWasWon) {
-      setIsGameLost(true)
-    }
-    return loaded.guesses
+    return []
   })
 
   const [stats, setStats] = useState(() => loadStats())
@@ -105,7 +114,7 @@ function App() {
   }
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, solution, wordLength })
+    saveGameStateToLocalStorage({ guesses, solution}, wordLength )
   })
 
   useEffect(() => {
@@ -126,13 +135,39 @@ function App() {
   }, [isGameWon, isGameLost])
 
   const onChar = (value: string) => {
-    if (knTokenize(currentGuess.concat(value)).length <= wordLength && guesses.length < 8 && isValid(currentGuess, value)) {
+    if (knTokenize(currentGuess.concat(value)).length <= wordLength && guesses.length < 8 && isValid(currentGuess, value) && !isGameWon) {
       setCurrentGuess(`${currentGuess}${value}`)
     }
   }
 
   const onChange = () => {
       setEnabled(!enabled)
+  }
+
+  const changeWordLength = () => {
+      if (wordLength !== settingsWordLength)
+      {
+          const loaded = loadGameStateFromLocalStorage(settingsWordLength)
+          setWordLength(settingsWordLength)
+          setWordOfDay(settingsWordLength)
+          setIsGameWon(false)
+          setIsGameLost(false)
+          if(loaded) {
+              if (loaded?.solution !== solution) {
+                  setGuesses([])
+                  return
+              }
+              if (loaded?.guesses.includes(solution)) {
+                  setGuesses(loaded?.guesses)
+                  setIsGameWon(true)
+                  return
+              }
+              setGuesses(loaded?.guesses)
+          }
+          else {
+              setGuesses([])
+          }
+      }
   }
 
   const onDelete = () => {
@@ -143,18 +178,14 @@ function App() {
       setShiftPresser(!shiftPressed)
   }
 
-  const clearGuesses = () => {
-      guesses.length = 0
-      setIsGameWon(false)
-      setIsGameLost(false)
-  }
-
   const onEnter = () => {
+
 
     if (isGameWon || isGameLost) {
       return
     }
-    if (!(currentGuess.length === 5)) {
+
+    if (!(knTokenize(currentGuess).length === wordLength)) {
       setIsNotEnoughLetters(true)
       return setTimeout(() => {
         setIsNotEnoughLetters(false)
@@ -162,7 +193,6 @@ function App() {
     }
 
 
-      console.log("Hitting enter")
     if (!isWordInWordList(currentGuess, wordLength) && enabled) {
 
       setIsWordNotFoundAlertOpen(true)
@@ -220,10 +250,10 @@ function App() {
           onClick={() => setIsStatsModalOpen(true)}
         />
 
-          <MenuIcon
-              className="h-6 w-6 cursor-pointer"
-              onClick={() => setIsSettingsModalOpen(true)}
-          />
+        <MenuIcon
+          className="h-6 w-6 cursor-pointer dark:stroke-white"
+          onClick={() => setIsSettingsModalOpen(true)}
+        />
 
       </div>
       <Grid guesses={guesses} currentGuess={currentGuess} wordLength={wordLength} />
@@ -238,14 +268,12 @@ function App() {
       />
       <SettingsModal
         isOpen={isSettingsModalOpen}
-        handleClose={() => {setIsSettingsModalOpen(false); setWordOfDay(wordLength)}}
+        handleClose={() => {setIsSettingsModalOpen(false); changeWordLength()}}
         enabled={enabled}
         onChange={onChange}
-        wordLength={wordLength}
-        setWordLength={setWordLength}
-        clearGuesses={clearGuesses}
+        wordLength={settingsWordLength}
+        setWordLength={setSettingsWordLength}
       />
-
       <InfoModal
         isOpen={isInfoModalOpen}
         handleClose={() => setIsInfoModalOpen(false)}
