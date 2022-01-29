@@ -8,8 +8,9 @@ import { InfoModal } from './components/modals/InfoModal'
 import { WinModal } from './components/modals/WinModal'
 import {isWordInWordList, isWinningWord, solution, setWordOfDay} from './lib/words'
 import {
-  loadGameStateFromLocalStorage,
-  saveGameStateToLocalStorage,
+    getWordLengthFromLocalStorage,
+    loadGameStateFromLocalStorage,
+    saveGameStateToLocalStorage,
 } from './lib/localStorage'
 import {knTokenize} from "./lib/kannada";
 import {isValid} from "./lib/statuses";
@@ -27,26 +28,34 @@ function App() {
   const [shareComplete, setShareComplete] = useState(false)
   const [shiftPressed, setShiftPresser] = useState(false)
   const [wordLength, setWordLength] = useState(5)
+  const [settingsWordLength, setSettingsWordLength] = useState(5)
   const [enabled, setEnabled] = useState(true)
 
 
   const [guesses, setGuesses] = useState<string[]>(() => {
-    const loaded = loadGameStateFromLocalStorage()
-      if(loaded?.wordLength === 4 || loaded?.wordLength === 5) {
-          setWordLength(loaded?.wordLength)
-          setWordOfDay(loaded?.wordLength)
-      }
-    if (loaded?.solution !== solution) {
-      return []
+    var storedWordLength = getWordLengthFromLocalStorage()
+    if(storedWordLength === 4 || storedWordLength === 5) {
+      setWordLength(storedWordLength)
+      setWordOfDay(storedWordLength)
     }
-    if (loaded.guesses.includes(solution)) {
-      setIsGameWon(true)
+    if (storedWordLength) {
+        if (storedWordLength !== wordLength){
+            setWordLength(storedWordLength)
+        }
+        const loaded = loadGameStateFromLocalStorage(storedWordLength)
+        if (loaded?.solution !== solution) {
+            return []
+        }
+        if (loaded.guesses.includes(solution)) {
+            setIsGameWon(true)
+        }
+        return loaded.guesses
     }
-    return loaded.guesses
+    return []
   })
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, solution, wordLength })
+    saveGameStateToLocalStorage({ guesses, solution}, wordLength )
   })
 
   useEffect(() => {
@@ -56,13 +65,39 @@ function App() {
   }, [isGameWon])
 
   const onChar = (value: string) => {
-    if (knTokenize(currentGuess.concat(value)).length <= wordLength && guesses.length < 8 && isValid(currentGuess, value)) {
+    if (knTokenize(currentGuess.concat(value)).length <= wordLength && guesses.length < 8 && isValid(currentGuess, value) && !isGameWon) {
       setCurrentGuess(`${currentGuess}${value}`)
     }
   }
 
   const onChange = () => {
       setEnabled(!enabled)
+  }
+
+  const changeWordLength = () => {
+      if (wordLength !== settingsWordLength)
+      {
+          const loaded = loadGameStateFromLocalStorage(settingsWordLength)
+          setWordLength(settingsWordLength)
+          setWordOfDay(settingsWordLength)
+          setIsGameWon(false)
+          setIsGameLost(false)
+          if(loaded) {
+              if (loaded?.solution !== solution) {
+                  setGuesses([])
+                  return
+              }
+              if (loaded?.guesses.includes(solution)) {
+                  setGuesses(loaded?.guesses)
+                  setIsGameWon(true)
+                  return
+              }
+              setGuesses(loaded?.guesses)
+          }
+          else {
+              setGuesses([])
+          }
+      }
   }
 
   const onDelete = () => {
@@ -73,14 +108,7 @@ function App() {
       setShiftPresser(!shiftPressed)
   }
 
-  const clearGuesses = () => {
-      guesses.length = 0
-      setIsGameWon(false)
-      setIsGameLost(false)
-  }
-
   const onEnter = () => {
-      console.log("Hitting enter")
     if (!isWordInWordList(currentGuess, wordLength) && enabled) {
       setIsWordNotFoundAlertOpen(true)
       return setTimeout(() => {
@@ -142,12 +170,11 @@ function App() {
       />
       <SettingsModal
         isOpen={isSettingsModalOpen}
-        handleClose={() => {setIsSettingsModalOpen(false); setWordOfDay(wordLength)}}
+        handleClose={() => {setIsSettingsModalOpen(false); changeWordLength()}}
         enabled={enabled}
         onChange={onChange}
-        wordLength={wordLength}
-        setWordLength={setWordLength}
-        clearGuesses={clearGuesses}
+        wordLength={settingsWordLength}
+        setWordLength={setSettingsWordLength}
       />
       <WinModal
         isOpen={isWinModalOpen}

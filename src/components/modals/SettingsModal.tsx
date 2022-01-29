@@ -10,7 +10,6 @@ type Props = {
   onChange: () => void
   wordLength: number
   setWordLength: (arg0: number) => void
-  clearGuesses: () => void
 }
 
 const plans = [
@@ -18,7 +17,7 @@ const plans = [
 5,
 ]
 
-export const SettingsModal = ({ isOpen, handleClose, enabled, onChange, wordLength, setWordLength , clearGuesses}: Props) => {
+export const SettingsModal = ({ isOpen, handleClose, enabled, onChange, wordLength, setWordLength }: Props) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
@@ -73,7 +72,7 @@ export const SettingsModal = ({ isOpen, handleClose, enabled, onChange, wordLeng
 
                     <div className="w-full px-4 py-16">
                       <div className="w-full max-w-md mx-auto">
-                        <RadioGroup value={wordLength} onChange={(arg)=>{setWordLength(arg); clearGuesses()} }>
+                        <RadioGroup value={wordLength} onChange={(arg)=>{setWordLength(arg)}}>
                           <RadioGroup.Label className="sr-only">Server size</RadioGroup.Label>
                           <div className="space-y-2">
                             {plans.map((plan) => (
