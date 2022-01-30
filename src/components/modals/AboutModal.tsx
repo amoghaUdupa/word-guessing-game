@@ -14,8 +14,13 @@ export const AboutModal = ({ isOpen, handleClose }: Props) => {
           href="https://github.com/hannahcode/GAME"
           className="underline font-bold"
         >
-          check out the code here
-        </a>{' '}
+          check out the code here.</a> ಕನ್ನಡ
+          <a
+              href="https://github.com/amoghaUdupa/word-guessing-game"
+              className="underline font-bold"
+          >
+            code
+        </a>
       </p>
     </BaseModal>
   )

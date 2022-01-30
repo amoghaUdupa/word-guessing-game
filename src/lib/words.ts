@@ -18,7 +18,7 @@ export const getWordOfDayIndex = () => {
   const epochMs = new Date('January 1, 2022 00:00:00').valueOf()
   const now = Date.now()
   const msInDay = 86400000
-  const index = Math.floor((now - epochMs - 19800000) / msInDay)
+  const index = Math.floor((now - epochMs + 19800000) / msInDay)
   return index
 }
 
@@ -32,5 +32,5 @@ export const setWordOfDay = (wordLength:number) => {
 
 export const solutionIndex = getWordOfDayIndex()
 export var solution = WORDS[solutionIndex]
-export const tomorrow = (solutionIndex + 1) * 86400000 + new Date('January 1, 2022 00:00:00').valueOf()
+export const tomorrow = (solutionIndex + 1) * 86400000 + new Date('January 1, 2022 00:00:00').valueOf() - 19800000
 

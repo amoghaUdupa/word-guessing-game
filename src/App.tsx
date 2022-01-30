@@ -69,7 +69,6 @@ function App() {
       : false
   )
   const [successAlert, setSuccessAlert] = useState('')
-  const [shareComplete, setShareComplete] = useState(false)
   const [shiftPressed, setShiftPresser] = useState(false)
   const [wordLength, setWordLength] = useState(5)
   const [settingsWordLength, setSettingsWordLength] = useState(5)
@@ -227,24 +226,18 @@ function App() {
   }
 
   return (
-    <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-      <div className="flex w-80 mx-auto items-center mb-8 mt-12">
+    <div className="py-4 max-w-7xl mx-auto sm:px-2 lg:px-8">
+      <div className="flex w-80 mx-auto items-center mb-4 mt-6">
         <h1 className="text-xl grow font-bold dark:text-white">{GAME_TITLE}</h1>
         <SunIcon
           className="h-6 w-6 cursor-pointer dark:stroke-white"
           onClick={() => handleDarkMode(!isDarkMode)}
         />
 
-      <Alert message="ವರ್ಡಲ್ಲ" isOpen={isWordNotFoundAlertOpen} />
+      <Alert message={WORD_NOT_FOUND_MESSAGE} isOpen={isWordNotFoundAlertOpen} />
       <Alert
-        message={`ತಪ್ಪು, ಇವತ್ತಿನ ಪದ " ${solution} "`}
+        message={CORRECT_WORD_MESSAGE(solution)}
         isOpen={isGameLost}
-      />
-      <Alert
-        message="ಕಾಪಿ ಮಾಡಲಾಗಿದೆ"
-        isOpen={shareComplete}
-        variant="success"
       />
 
         <InformationCircleIcon
@@ -303,6 +296,14 @@ function App() {
         handleClose={() => setIsAboutModalOpen(false)}
       />
 
+        <button
+            type="button"
+            className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={ () => window.open("https://alar.ink")}
+        >
+            ನಿಘಂಟು
+        </button>
+
       <button
         type="button"
         className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none"
@@ -311,13 +312,6 @@ function App() {
         {ABOUT_GAME_MESSAGE}
       </button>
 
-      <button
-          type="button"
-          className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={ () => window.open("https://alar.ink")}
-      >
-        ನಿಘಂಟು
-      </button>
       <Alert message={NOT_ENOUGH_LETTERS_MESSAGE} isOpen={isNotEnoughLetters} />
       <Alert
         message={WORD_NOT_FOUND_MESSAGE}

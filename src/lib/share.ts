@@ -1,6 +1,5 @@
 import { getGuessStatuses } from './statuses'
 import { solutionIndex } from './words'
-import { GAME_TITLE } from '../constants/strings'
 import {knTokenize} from "./kannada";
 
 export const shareStatus = (guesses: string[], wordLength: number) => {

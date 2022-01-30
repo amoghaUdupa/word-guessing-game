@@ -1,6 +1,13 @@
+
 Word Guessing Game
 
 This is a clone project of a popular word guessing game made using React, Typescript, and Tailwind.
+=======
+# ಕನ್ನಡ ವರ್ಡಲ್ಲ
+- ಕನ್ನಡದ ವರ್ಡಲ್ಲ [ಇಲ್ಲಿದೆ](https://wordalla.online)
+
+
+## Upstream README:
 
 _To Run Locally:_
 Clone the repository and perform the following command line actions:
@@ -33,3 +40,4 @@ _To create a version in a different language:_
 - If the language has letters that are not present in English, add them to the `CharValue` type in `src/lib/statuses.ts` and update the keyboard in `src/lib/components/keyboard/Keyboard.tsx`
 - If the language's letters are made of multiple unicode characters, use a grapheme splitter at various points throughout the app or normalize the input so that all of the letters are made of a single character
 - If the language is written right-to-left, add `dir="rtl"` to the HTML tag in `public/index.html` and prepend `\u202E` (the unicode right-to-left override character) to the return statement of the inner function in `generateEmojiGrid` in `src/lib/share.ts`
+=======
