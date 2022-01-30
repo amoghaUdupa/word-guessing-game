@@ -21,7 +21,14 @@ function App() {
   const [isGameWon, setIsGameWon] = useState(false)
   const [isWinModalOpen, setIsWinModalOpen] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(() => {
+      var storedWordLength = getWordLengthFromLocalStorage()
+      if(!storedWordLength) {
+          return true
+      } else {
+          return false
+      }
+  })
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
   const [isGameLost, setIsGameLost] = useState(false)
