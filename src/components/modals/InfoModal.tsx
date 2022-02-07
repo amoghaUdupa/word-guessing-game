@@ -51,11 +51,12 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
       <Cell value="ಶ್ಯ" />
       <Cell value="ಕಾಂ" status="present" swaraStatus="correct" />
       <Cell value="ಭೋ"  />
-      <Cell value="ಜಿ" />
+      <Cell value="ಜಿ" status="inplace" swaraStatus="correct" />
     </div>
     <p className="text-sm text-gray-500">
       1ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ವ್ಯಂಜನ ಪದದಲ್ಲಿ ಇಲ್ಲ, ಆದರೆ ೇ-ಕಾರವು ಆ ಸ್ಥಾನದಲ್ಲಿದೆ.
       3ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ವ್ಯಂಜನ ಪದದಲ್ಲಿ ಆ ಸ್ಥಾನದಲ್ಲಿ ಇಲ್ಲ. ಹಾಗೆ, ಆಂ ಕಾರವು ಆ ಸ್ಥಾನದಲ್ಲಿದೆ.
+      5ನೇ ಮನೆಯಲ್ಲಿ ಇರುವ ವ್ಯಂಜನ ಮತ್ತು ಸ್ವರ ಸರಿ. ಒತ್ತಕ್ಷರ ತಪ್ಪು.
     </p>
    </BaseModal>
 

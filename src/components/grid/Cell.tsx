@@ -19,7 +19,7 @@ export const Cell = ({ value, status, swaraStatus }: Props) => {
             'bg-slate border-slate-200': !status,
             'bg-slate-400 text-white': status === 'absent',
             'bg-green-500 dark:bg-green-600 text-white': status === 'correct',
-            'bg-orange-500 text-white': status === 'present',
+            'bg-yellow-500 dark:bg-orange-500 text-white': status === 'present',
             'bg-blue-500 text-white': status === 'inplace',
 
     },
@@ -27,7 +27,7 @@ export const Cell = ({ value, status, swaraStatus }: Props) => {
           'border-slate-200 dark:border-slate-500': !swaraStatus,
           'border-slate-400': swaraStatus === 'absent',
           'border-green-500 dark:border-green-600': swaraStatus === 'correct',
-          'border-orange-500': swaraStatus === 'present',
+          'border-yellow-500 dark:border-orange-500': swaraStatus === 'present',
           'border-blue-500': swaraStatus === 'inplace',
       }
   )

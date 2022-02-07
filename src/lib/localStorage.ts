@@ -33,7 +33,7 @@ export const loadGameStateFromLocalStorage = (wordLength : number) => {
   return state ? (JSON.parse(state) as StoredGameState) : null
 }
 
-const gameStatKey = 'gameStats'
+const gameStatKey = 'gameStatsU'
 
 export type GameStats = {
   winDistribution: number[]
