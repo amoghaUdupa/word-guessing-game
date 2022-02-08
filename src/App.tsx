@@ -1,9 +1,8 @@
-
 import {
   InformationCircleIcon,
   ChartBarIcon,
   SunIcon,
-    MenuIcon
+  MenuIcon,
 } from '@heroicons/react/outline'
 
 import { useState, useEffect } from 'react'
@@ -25,16 +24,21 @@ import {
 } from './constants/strings'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
 
-import {isWordInWordList, isWinningWord, solution, setWordOfDay} from './lib/words'
+import {
+  isWordInWordList,
+  isWinningWord,
+  solution,
+  setWordOfDay,
+} from './lib/words'
 
 import {
-    getWordLengthFromLocalStorage,
-    loadGameStateFromLocalStorage,
-    saveGameStateToLocalStorage,
+  getWordLengthFromLocalStorage,
+  loadGameStateFromLocalStorage,
+  saveGameStateToLocalStorage,
 } from './lib/localStorage'
-import {knTokenize} from "./lib/kannada";
-import {isValid} from "./lib/statuses";
-import {SettingsModal} from "./components/modals/SettingsModal";
+import { knTokenize } from './lib/kannada'
+import { isValid } from './lib/statuses'
+import { SettingsModal } from './components/modals/SettingsModal'
 
 import './App.css'
 
@@ -49,12 +53,12 @@ function App() {
   const [isGameWon, setIsGameWon] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(() => {
-      var storedWordLength = getWordLengthFromLocalStorage()
-      if(!storedWordLength) {
-          return true
-      } else {
-          return false
-      }
+    var storedWordLength = getWordLengthFromLocalStorage()
+    if (!storedWordLength) {
+      return true
+    } else {
+      return false
+    }
   })
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
@@ -76,30 +80,25 @@ function App() {
 
   const [guesses, setGuesses] = useState<string[]>(() => {
     var storedWordLength = getWordLengthFromLocalStorage()
-    if(storedWordLength === 4 || storedWordLength === 5) {
+    if (storedWordLength === 4 || storedWordLength === 5) {
       setWordLength(storedWordLength)
       setWordOfDay(storedWordLength)
     }
 
     if (storedWordLength) {
-        if (storedWordLength !== wordLength){
-            setWordLength(storedWordLength)
-        }
-        const loaded = loadGameStateFromLocalStorage(storedWordLength)
-        const gameWasWon = loaded?.guesses.includes(solution)
-        if (gameWasWon) {
-            setIsGameWon(true)
-        }
-        if (loaded?.guesses.length === 6 && !gameWasWon) {
-            setIsGameLost(true)
-        }
-        if (loaded?.solution !== solution) {
-            return []
-        }
-        if (loaded.guesses.includes(solution)) {
-            setIsGameWon(true)
-        }
-        return loaded.guesses
+      if (storedWordLength !== wordLength) {
+        setWordLength(storedWordLength)
+        setCurrentGuess('')
+      }
+      const loaded = loadGameStateFromLocalStorage(storedWordLength)
+      const gameWasWon = loaded?.guesses.includes(solution)
+      if (gameWasWon) {
+        setIsGameWon(true)
+      }
+      if (loaded?.solution !== solution) {
+        return []
+      }
+      return loaded.guesses
     }
     return []
   })
@@ -120,7 +119,7 @@ function App() {
   }
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, solution}, wordLength )
+    saveGameStateToLocalStorage({ guesses, solution }, wordLength)
   })
 
   useEffect(() => {
@@ -141,39 +140,42 @@ function App() {
   }, [isGameWon, isGameLost])
 
   const onChar = (value: string) => {
-    if (knTokenize(currentGuess.concat(value)).length <= wordLength && guesses.length < 8 && isValid(currentGuess, value) && !isGameWon) {
+    if (
+      knTokenize(currentGuess.concat(value)).length <= wordLength &&
+      guesses.length < 8 &&
+      isValid(currentGuess, value) &&
+      !isGameWon
+    ) {
       setCurrentGuess(`${currentGuess}${value}`)
     }
   }
 
   const onChange = () => {
-      setEnabled(!enabled)
+    setEnabled(!enabled)
   }
 
   const changeWordLength = () => {
-      if (wordLength !== settingsWordLength)
-      {
-          const loaded = loadGameStateFromLocalStorage(settingsWordLength)
-          setWordLength(settingsWordLength)
-          setWordOfDay(settingsWordLength)
-          setIsGameWon(false)
-          setIsGameLost(false)
-          if(loaded) {
-              if (loaded?.solution !== solution) {
-                  setGuesses([])
-                  return
-              }
-              if (loaded?.guesses.includes(solution)) {
-                  setGuesses(loaded?.guesses)
-                  setIsGameWon(true)
-                  return
-              }
-              setGuesses(loaded?.guesses)
-          }
-          else {
-              setGuesses([])
-          }
+    if (wordLength !== settingsWordLength) {
+      const loaded = loadGameStateFromLocalStorage(settingsWordLength)
+      setWordLength(settingsWordLength)
+      setWordOfDay(settingsWordLength)
+      setIsGameWon(false)
+      setIsGameLost(false)
+      if (loaded) {
+        if (loaded?.solution !== solution) {
+          setGuesses([])
+          return
+        }
+        if (loaded?.guesses.includes(solution)) {
+          setGuesses(loaded?.guesses)
+          setIsGameWon(true)
+          return
+        }
+        setGuesses(loaded?.guesses)
+      } else {
+        setGuesses([])
       }
+    }
   }
 
   const onDelete = () => {
@@ -181,12 +183,10 @@ function App() {
   }
 
   const onShift = () => {
-      setShiftPresser(!shiftPressed)
+    setShiftPresser(!shiftPressed)
   }
 
   const onEnter = () => {
-
-
     if (isGameWon || isGameLost) {
       return
     }
@@ -198,9 +198,7 @@ function App() {
       }, ALERT_TIME_MS)
     }
 
-
     if (!isWordInWordList(currentGuess, wordLength) && enabled) {
-
       setIsWordNotFoundAlertOpen(true)
       return setTimeout(() => {
         setIsWordNotFoundAlertOpen(false)
@@ -209,7 +207,11 @@ function App() {
 
     const winningWord = isWinningWord(currentGuess)
 
-    if (knTokenize(currentGuess).length === wordLength && guesses.length < 8 && !isGameWon) {
+    if (
+      knTokenize(currentGuess).length === wordLength &&
+      guesses.length < 8 &&
+      !isGameWon
+    ) {
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
@@ -234,11 +236,11 @@ function App() {
           onClick={() => handleDarkMode(!isDarkMode)}
         />
 
-      <Alert message={WORD_NOT_FOUND_MESSAGE} isOpen={isWordNotFoundAlertOpen} />
-      <Alert
-        message={CORRECT_WORD_MESSAGE(solution)}
-        isOpen={isGameLost}
-      />
+        <Alert
+          message={WORD_NOT_FOUND_MESSAGE}
+          isOpen={isWordNotFoundAlertOpen}
+        />
+        <Alert message={CORRECT_WORD_MESSAGE(solution)} isOpen={isGameLost} />
 
         <InformationCircleIcon
           className="h-6 w-6 cursor-pointer dark:stroke-white"
@@ -254,9 +256,12 @@ function App() {
           className="h-6 w-6 cursor-pointer dark:stroke-white"
           onClick={() => setIsSettingsModalOpen(true)}
         />
-
       </div>
-      <Grid guesses={guesses} currentGuess={currentGuess} wordLength={wordLength} />
+      <Grid
+        guesses={guesses}
+        currentGuess={currentGuess}
+        wordLength={wordLength}
+      />
       <Keyboard
         onChar={onChar}
         onDelete={onDelete}
@@ -268,7 +273,10 @@ function App() {
       />
       <SettingsModal
         isOpen={isSettingsModalOpen}
-        handleClose={() => {setIsSettingsModalOpen(false); changeWordLength()}}
+        handleClose={() => {
+          setIsSettingsModalOpen(false)
+          changeWordLength()
+        }}
         enabled={enabled}
         onChange={onChange}
         wordLength={settingsWordLength}
@@ -296,13 +304,13 @@ function App() {
         handleClose={() => setIsAboutModalOpen(false)}
       />
 
-        <button
-            type="button"
-            className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            onClick={ () => window.open("https://alar.ink")}
-        >
-            ನಿಘಂಟು
-        </button>
+      <button
+        type="button"
+        className="mx-auto mt-8 flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        onClick={() => window.open('https://alar.ink')}
+      >
+        ನಿಘಂಟು
+      </button>
 
       <button
         type="button"
@@ -327,4 +335,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

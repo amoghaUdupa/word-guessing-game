@@ -3,7 +3,7 @@ export const GAME_TITLE = 'ಕನ್ನಡ ವರ್ಡಲ್ಲ'
 export const WIN_MESSAGES = ['ಶಭಾಷ್!', 'ಭಲೇ!', 'ಅದ್ಭುತ!']
 export const GAME_COPIED_MESSAGE = 'ಕಾಪಿ ಮಾಡಲಾಗಿದೆ'
 export const ABOUT_GAME_MESSAGE = 'ಆಟದ ಬಗ್ಗೆ'
-export const NOT_ENOUGH_LETTERS_MESSAGE = 'ಅಕ್ಷರಗಳು ಸಾಲುತಿತ್ತಿಲ್ಲ'
+export const NOT_ENOUGH_LETTERS_MESSAGE = 'ಅಕ್ಷರಗಳು ಸಾಲುತ್ತಿಲ್ಲ'
 export const WORD_NOT_FOUND_MESSAGE = 'ವರ್ಡಲ್ಲ'
 export const CORRECT_WORD_MESSAGE = (solution: string) =>
   `ಸರಿಯಾದ ಉತ್ತರ "${solution}"`
