@@ -14,12 +14,25 @@ export const isWinningWord = (word: string) => {
 }
 
 export const getWordOfDayIndex = () => {
-  // January 1, 2022 Game Epoch IST 5am
-  const epochMs = new Date('January 1, 2022 00:00:00').valueOf()
-  const now = Date.now()
-  const msInDay = 86400000
-  const index = Math.floor((now - epochMs) / msInDay)
+  // January 1, 2022 Game Epoch IST
+  const epoch = new Date(2022, 0)
+  const start = new Date(epoch)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  let index = 0
+  while (start < today) {
+    index++
+    start.setDate(start.getDate() + 1)
+  }
   return index
+}
+
+export const getTomorrow = () => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const nextDay = new Date(today)
+  nextDay.setDate(today.getDate() + 1)
+  return nextDay.valueOf()
 }
 
 export const getWordOfDay = () => {
@@ -32,5 +45,5 @@ export const setWordOfDay = (wordLength:number) => {
 
 export const solutionIndex = getWordOfDayIndex()
 export var solution = WORDS[solutionIndex]
-export const tomorrow = (solutionIndex + 1) * 86400000 + new Date('January 1, 2022 00:00:00').valueOf()
+export const tomorrow = getTomorrow()
 
