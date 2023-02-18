@@ -1,11 +1,12 @@
 import { getGuessStatuses } from './statuses'
+// Get rid of 393 hack, terrible stuff that is
 import { solutionIndex } from './words'
 import {knTokenize} from "./kannada";
 
 export const shareStatus = (guesses: string[], wordLength: number) => {
   navigator.clipboard.writeText(
     'ಕನ್ನಡ #ವರ್ಡಲ್ಲ ' +
-      (wordLength===4?(solutionIndex-23):solutionIndex) +
+      (wordLength===4?(solutionIndex-23+393):solutionIndex+393) +
       ' ' +
       guesses.length +
       '/8\n\n' +

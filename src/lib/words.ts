@@ -24,7 +24,7 @@ export const getWordOfDayIndex = () => {
     index++
     start.setDate(start.getDate() + 1)
   }
-  return index
+  return (index - 22) % 371
 }
 
 export const getTomorrow = () => {
